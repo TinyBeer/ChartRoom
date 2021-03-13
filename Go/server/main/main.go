@@ -8,7 +8,8 @@ import (
 )
 
 func process(conn net.Conn) {
-	fmt.Printf("接收到%v的连接\n", conn.RemoteAddr().String())
+
+	// fmt.Printf("%v\n", conn.RemoteAddr().String())
 	defer conn.Close()
 
 	// 创建总控
@@ -29,7 +30,7 @@ func main() {
 	// 初始化连接池
 	initPool("localhost:6379", 16, 0, 300*time.Second)
 	initUserDao()
-	fmt.Println("服务器[新结构]在8889端口监听...")
+	// fmt.Println("服务器[新结构]在8889端口监听...")
 
 	listen, err := net.Listen("tcp", "0.0.0.0:8889")
 	if err != nil {
@@ -39,10 +40,10 @@ func main() {
 
 	// 延时关闭监听
 	defer listen.Close()
-
+	fmt.Println("等待客户端连接服务器...")
 	// 循环等待用户连接
 	for {
-		fmt.Println("等待客户端连接服务器...")
+
 		conn, err := listen.Accept()
 		if err != nil {
 			fmt.Println("listen.Accept() failed, err=", err.Error())

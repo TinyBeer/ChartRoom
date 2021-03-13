@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ChartRoom/client/processes"
 	"ChartRoom/common/message"
 	"ChartRoom/common/utils"
 	"encoding/json"
@@ -53,6 +54,8 @@ func login(userID int, userPwd string) (err error) {
 	var loginResMes message.LoginResMes
 	err = json.Unmarshal([]byte(resMes.Data), &loginResMes)
 	if loginResMes.Code == 200 {
+		processes.CurUser.UserName = loginResMes.UserName
+		processes.CurUser.UserStatus = message.USER_ONLINE
 		fmt.Println("登陆成功")
 		return nil
 	} else {

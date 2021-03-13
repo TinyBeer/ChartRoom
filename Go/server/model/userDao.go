@@ -39,7 +39,7 @@ func (udao *UserDao) getUserById(conn redis.Conn, id int) (user *message.User, e
 		}
 		return nil, err
 	}
-	fmt.Println(res)
+	// fmt.Println(res)
 	user = &message.User{}
 	// 无错误  将res反序列化为User实例
 	err = json.Unmarshal([]byte(res), user)

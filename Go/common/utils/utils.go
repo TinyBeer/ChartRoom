@@ -22,20 +22,13 @@ func NewTransfer(conn net.Conn) *Transfer {
 // ReadPkg  读取数据包
 func (tf *Transfer) ReadPkg() (mes message.Message, err error) {
 
-	// 创建数据缓存buf
-	// buf := make([]byte, 4094)
-
-	// fmt.Println("等待读取客户端发送的数据...")
-
 	// 读取包长度
 	_, err = tf.Conn.Read(tf.Buf[:4])
 	if err != nil {
 		// 读取包长度失败
-		// fmt.Println("conn.Read failed, err=", err.Error())
 		return
 	}
 
-	// fmt.Printf("数据长度：%v\n", buf[:4])
 	// 数据类型转换  获取包大小
 	var pkgLen uint32 = binary.BigEndian.Uint32(tf.Buf[:4])
 

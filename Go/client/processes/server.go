@@ -17,16 +17,22 @@ func ShowMenu(userName string) {
 	fmt.Println("----2：发送消息---------")
 	fmt.Println("----3：信息列表---------")
 	fmt.Println("----4：退出系统---------")
-	fmt.Print("请选择1-4：")
+	fmt.Println("请选择1-4：")
 
 	var key int
+	var content string
+
+	// 总会使用SmsProcess
+	smsProcess := &SmsProcess{}
 	fmt.Scanln(&key)
 	switch key {
 	case 1:
 		// fmt.Println("显示在线用户列表")
 		outputOnlineUsers()
 	case 2:
-		fmt.Println("发送消息")
+		fmt.Println("请输入要发送的消息:")
+		fmt.Scanf("%s\n", &content)
+		smsProcess.SendGroupMes(content)
 	case 3:
 		fmt.Println("信息列表")
 	case 4:
@@ -51,8 +57,6 @@ func serverMesProcess(conn net.Conn) {
 			return
 		}
 
-		// fmt.Printf("mes = %v\n", mes)
-
 		switch mes.Type {
 		case message.NotifyUserStatusMesType:
 			// 处理用户上上线消息
@@ -66,6 +70,8 @@ func serverMesProcess(conn net.Conn) {
 			}
 			updateUserStatus(&notifyUserStatusMes)
 			outputOnlineUsers()
+		case message.SmsMesType:
+			outputGroupMes(&mes)
 		default:
 			fmt.Println("获取到未知消息类型")
 		}

@@ -1,12 +1,14 @@
 package processes
 
 import (
+	"ChartRoom/client/model"
 	"ChartRoom/common/message"
 	"fmt"
 )
 
 /// 客户端需要维护的map
 var onlineUsers map[int]*message.User = make(map[int]*message.User, 10)
+var CurUser model.CurUser
 
 // 哭护短显示当前在线用户
 func outputOnlineUsers() {

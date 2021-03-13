@@ -24,6 +24,9 @@ func (pro *Processor) serverProcess(mes *message.Message) (err error) {
 		up := &processes.UserProcess{Conn: pro.Conn}
 		// 处理注册消息
 		up.ServerProccessRegister(mes)
+	case message.SmsMesType:
+		smsProcess := &processes.SmsProcess{}
+		smsProcess.SendGroupMes(mes)
 	default:
 		err = errors.New("未知消息类型")
 	}
@@ -38,17 +41,16 @@ func (pro *Processor) Process2() (err error) {
 	for {
 		mes, err := tf.ReadPkg()
 		if err != nil {
-			if err == io.EOF {
+
+			switch err {
+			case io.EOF:
 				fmt.Println("客户端断开连接")
-				return err
-			} else {
-				fmt.Print("readPkg err=", err.Error())
-				return err
+			default:
+				fmt.Println("客户端连接中断")
+
 			}
-
+			return err
 		}
-
-		// fmt.Println("mes=", mes)
 
 		err = pro.serverProcess(&mes)
 		if err != nil {

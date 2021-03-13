@@ -18,6 +18,8 @@ var (
 	RegisterMesResType = "RegisterMesRes"
 	// NotifyUserStatusMes 推送用户登录消息
 	NotifyUserStatusMesType = "NotifyUserStatusMes"
+	// SmsMesType 短消息类型
+	SmsMesType = "SmsMes"
 )
 
 // Message ：消息类型
@@ -56,4 +58,10 @@ type RegisterResMes struct {
 type NotifyUserStatusMes struct {
 	UserID     int `json:"userID"`
 	UserStatus int `json:"userStatus"`
+}
+
+// SmsMes 增加结构体
+type SmsMes struct {
+	Content string `json:"content"`
+	User           // 匿名结构体
 }

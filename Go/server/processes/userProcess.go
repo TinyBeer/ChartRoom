@@ -116,7 +116,6 @@ func (up *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 
 	var resMes message.Message
 	resMes.Type = message.LoginResMesType
-
 	var loginResMes message.LoginResMes
 
 	// 2.比对
