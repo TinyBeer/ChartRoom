@@ -28,7 +28,7 @@ func ShowMenu(userName string) {
 		switch key {
 		case 1:
 			// fmt.Println("显示在线用户列表")
-			outputOnlineUsers()
+			OutputOnlineUsers()
 		case 2:
 			fmt.Println("请输入要发送的消息:")
 			fmt.Scanf("%s\n", &content)
@@ -49,7 +49,8 @@ func ShowMenu(userName string) {
 }
 
 // 和服务器保持通信
-func serverMesProcess(conn net.Conn) {
+func ServerMesProcess(conn net.Conn) {
+	defer conn.Close()
 	// 创建一个Transfer 不停的读取消息
 	tf := utils.NewTransfer(conn)
 	for {
@@ -72,7 +73,7 @@ func serverMesProcess(conn net.Conn) {
 				continue
 			}
 			updateUserStatus(&notifyUserStatusMes)
-			outputOnlineUsers()
+			OutputOnlineUsers()
 		case message.SmsMesType:
 			outputGroupMes(&mes)
 		default:

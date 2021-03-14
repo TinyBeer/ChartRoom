@@ -11,7 +11,7 @@ var onlineUsers map[int]*message.User = make(map[int]*message.User, 10)
 var CurUser model.CurUser
 
 // 哭护短显示当前在线用户
-func outputOnlineUsers() {
+func OutputOnlineUsers() {
 	// 遍历onlineUsers
 	fmt.Println("当前在线用户列表:")
 	for id, _ := range onlineUsers {

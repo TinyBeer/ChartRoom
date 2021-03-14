@@ -57,7 +57,8 @@ func (pro *Processor) Process2() (err error) {
 
 		err = pro.serverProcess(&mes)
 		if err != nil {
-			fmt.Println("通讯协程断开， err=", err.Error())
+			fmt.Println("通讯异常")
+			// fmt.Println("通讯协程断开， err=", err.Error())
 		}
 	}
 }
