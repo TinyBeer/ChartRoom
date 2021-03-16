@@ -4,6 +4,7 @@ import (
 	"ChartRoom/common/message"
 	"ChartRoom/common/utils"
 	"ChartRoom/server/model"
+	"encoding/json"
 	"fmt"
 	"net"
 )
@@ -63,9 +64,15 @@ func (up *UserProcess) NotifyMeOffline(userId int) {
 	// 传输mes
 	tf := utils.NewTransfer(up.Conn)
 
-	err = tf.WritePkg(&mes)
+	// 序列化
+	data, err := json.Marshal(&mes)
 	if err != nil {
-		fmt.Println("tf.WritePkg failed, err=", err.Error())
+		return
+	}
+
+	err = tf.WriteData(data)
+	if err != nil {
+		fmt.Println("tf.WriteData failed, err=", err.Error())
 		return
 	}
 }
@@ -101,12 +108,16 @@ func (up *UserProcess) NotifyMeOnline(userId int) {
 		return
 	}
 
+	data, err := json.Marshal(&mes)
+	if err != nil {
+		return
+	}
+
 	// 传输mes
 	tf := utils.NewTransfer(up.Conn)
-
-	err = tf.WritePkg(&mes)
+	err = tf.WriteData(data)
 	if err != nil {
-		fmt.Println("tf.WritePkg failed, err=", err.Error())
+		fmt.Println("tf.WriteData failed, err=", err.Error())
 		return
 	}
 }
@@ -147,9 +158,15 @@ func (up *UserProcess) ServerProccessRegister(mes *message.Message) (err error) 
 		return
 	}
 
+	// 序列化
+	data, err := json.Marshal(&resMes)
+	if err != nil {
+		return
+	}
+
 	// 使用Transfer返回resMes
 	tf := utils.NewTransfer(up.Conn)
-	tf.WritePkg(&resMes)
+	tf.WriteData(data)
 	return
 }
 
@@ -210,8 +227,14 @@ func (up *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 		return
 	}
 
+	// 序列化
+	data, err := json.Marshal(&resMes)
+	if err != nil {
+		return
+	}
+
 	// 使用Transfer返回resMes
 	tf := utils.NewTransfer(up.Conn)
-	tf.WritePkg(&resMes)
+	tf.WriteData(data)
 	return
 }

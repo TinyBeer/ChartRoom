@@ -3,6 +3,7 @@ package processes
 import (
 	"ChartRoom/common/message"
 	"ChartRoom/common/utils"
+	"encoding/json"
 	"fmt"
 )
 
@@ -27,11 +28,17 @@ func (sp *SmsProcess) SendGroupMes(content string) (err error) {
 		return
 	}
 
+	// 序列化
+	data, err := json.Marshal(&mes)
+	if err != nil {
+		return
+	}
+
 	// 发送
 	tf := utils.NewTransfer(CurUser.Conn)
-	err = tf.WritePkg(&mes)
+	err = tf.WriteData(data)
 	if err != nil {
-		fmt.Println("tf.WritePkg failed, err=", err.Error())
+		fmt.Println("tf.WriteData failed, err=", err.Error())
 		return
 	}
 	return

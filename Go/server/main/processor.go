@@ -4,9 +4,11 @@ import (
 	"ChartRoom/common/message"
 	"ChartRoom/common/utils"
 	"ChartRoom/server/processes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net"
 )
 
@@ -43,7 +45,8 @@ func (pro *Processor) Process2() (err error) {
 	tf := utils.NewTransfer(pro.Conn)
 	// 读取客户发送的消息
 	for {
-		mes, err := tf.ReadPkg()
+
+		data, err := tf.ReadDate()
 		if err != nil {
 
 			switch err {
@@ -54,11 +57,18 @@ func (pro *Processor) Process2() (err error) {
 			}
 			return err
 		}
+		var mes message.Message
+		err = json.Unmarshal(data, &mes)
+		if err != nil {
+			log.Println("json.Unmarshal failed, err=", err.Error())
+			continue
+		}
 
 		err = pro.serverProcess(&mes)
 		if err != nil {
-			fmt.Println("通讯异常")
+			// fmt.Println("通讯异常")
 			// fmt.Println("通讯协程断开， err=", err.Error())
+			continue
 		}
 	}
 }

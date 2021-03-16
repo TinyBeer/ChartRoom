@@ -3,6 +3,7 @@ package processes
 import (
 	"ChartRoom/common/message"
 	"ChartRoom/common/utils"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -34,22 +35,33 @@ func (up *UserProcess) Register(userID int, userPwd, userName string) (err error
 
 	// 封包
 	err = utils.Pack(&mes, &registerMes)
-
 	if err != nil {
 		return err
 	}
 
+	// 序列化
+	data, err := json.Marshal(&mes)
+	if err != nil {
+		return
+	}
+
 	// 使用Transfer发送数据
 	tf := utils.NewTransfer(conn)
-	err = tf.WritePkg(&mes)
+	err = tf.WriteData(data)
 	if err != nil {
 		fmt.Println("注册消息发送失败")
 		return
 	}
 
-	// 读取客服务端返回的mes
-	resMes, err := tf.ReadPkg()
+	resData, err := tf.ReadDate()
 	if err != nil {
+		log.Println("tf.ReadDate failed, err=", err.Error())
+		return
+	}
+	var resMes message.Message
+	err = json.Unmarshal(resData, &resMes)
+	if err != nil {
+		log.Println("json.Unmarshal failed, err=", err.Error())
 		return
 	}
 
@@ -82,9 +94,15 @@ func (up *UserProcess) Logout() {
 		return
 	}
 
+	// 序列化
+	data, err := json.Marshal(&mes)
+	if err != nil {
+		return
+	}
+
 	// 4.发送
 	tf := utils.NewTransfer(CurUser.Conn)
-	tf.WritePkg(&mes)
+	tf.WriteData(data)
 }
 
 func (up *UserProcess) Login(userID int, userPwd string) (conn net.Conn, err error) {
@@ -106,20 +124,33 @@ func (up *UserProcess) Login(userID int, userPwd string) (conn net.Conn, err err
 	// 4.封包
 	err = utils.Pack(&mes, &loginMes)
 
+	// 序列化
+	data, err := json.Marshal(&mes)
+	if err != nil {
+		return
+	}
+
 	// 使用Transfer发送数据
 	tf := utils.NewTransfer(conn)
-	err = tf.WritePkg(&mes)
+	err = tf.WriteData(data)
 	if err != nil {
 		fmt.Println("登录消息发送失败")
 		return
 	}
 
-	// 读取客服务端返回的mes
-	resMes, err := tf.ReadPkg()
+	resData, err := tf.ReadDate()
 	if err != nil {
-		// fmt.Println("err=", err.Error())
+		log.Println("tf.ReadDate failed, err=", err.Error())
 		return
 	}
+
+	var resMes message.Message
+	err = json.Unmarshal(resData, &resMes)
+	if err != nil {
+		log.Println("json.Unmarshal failed, err=", err.Error())
+		return
+	}
+
 	// 解包
 	var loginResMes message.LoginResMes
 	err = utils.Unpack(&resMes, &loginResMes)
@@ -127,6 +158,7 @@ func (up *UserProcess) Login(userID int, userPwd string) (conn net.Conn, err err
 		fmt.Println("Unpack failed, err=", err.Error())
 		return
 	}
+
 	if loginResMes.Code == 200 {
 
 		CurUser.Conn = conn

@@ -3,6 +3,7 @@ package processes
 import (
 	"ChartRoom/common/message"
 	"ChartRoom/common/utils"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net"
@@ -15,9 +16,15 @@ func ServerMesProcess(conn net.Conn) {
 	tf := utils.NewTransfer(conn)
 	for {
 		// fmt.Println("客户端正在读取服务器发送的消息")
-		mes, err := tf.ReadPkg()
+		data, err := tf.ReadDate()
 		if err != nil {
-			log.Println("tf.ReadPkg failed, err=", err.Error())
+			log.Println("tf.ReadDate failed, err=", err.Error())
+			return
+		}
+		var mes message.Message
+		err = json.Unmarshal(data, &mes)
+		if err != nil {
+			log.Println("json.Unmarshal failed, err=", err.Error())
 			return
 		}
 
