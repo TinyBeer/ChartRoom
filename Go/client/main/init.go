@@ -21,6 +21,7 @@ func InitSystem() {
 
 func InitView() *view.PageMgr {
 	var content string
+	var toUserID int
 	smsProcess := &processes.SmsProcess{}
 	pMgr = view.NewPageMgr()
 	p := pMgr.AddPage("MainPage", "", "------------欢迎登录海量用户聊天系统------------", "")
@@ -64,6 +65,16 @@ func InitView() *view.PageMgr {
 	p.AddOption("\t信息列表", func() {
 
 	})
+
+	p.AddOption("\t发送留言", func() {
+		fmt.Println("请输入要给用户的ID:")
+		fmt.Scanln(&toUserID)
+		fmt.Println("请输入要发送的消息:")
+		fmt.Scanln(&content)
+		smsProcess.SendMessageToUser(toUserID, content)
+		log.Println("ok")
+	})
+
 	p.AddOption("\t退出聊天室", func() {
 		up := &processes.UserProcess{}
 		up.Logout()

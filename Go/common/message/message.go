@@ -22,6 +22,10 @@ var (
 	SmsMesType = "SmsMes"
 	// LogoutMesType 登出消息
 	LogoutMesType = "LogoutMes"
+	// MessageMesType 留言消息
+	MessageMesType = "MessageMes"
+	// MessageResMes 留言结果
+	MessageResMesType = "MessageResMes"
 )
 
 // Message ：消息类型
@@ -64,11 +68,24 @@ type NotifyUserStatusMes struct {
 
 // SmsMes 增加结构体
 type SmsMes struct {
-	Content string `json:"content"`
 	User           // 匿名结构体
+	Content string `json:"content"`
 }
 
 // LogoutMes
 type LogoutMes struct {
 	User // 匿名结构体
+}
+
+// MessageMes 留言
+type MessageMes struct {
+	User            // 匿名结构体
+	ToUserID int    `json:"toUserID"`
+	Content  string `json:"content"`
+}
+
+// MessageResMes 留言结果
+type MessageResMes struct {
+	Code  int    `json:"code"`  // 200 留言成功 300 留言失败
+	Error string `json:"error"` // 错误提示
 }

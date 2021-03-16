@@ -27,9 +27,11 @@ func (pMgr *PageMgr) Run() {
 		index, err := strconv.Atoi(pMgr.inputStr)
 		if err != nil || index <= 0 {
 			fmt.Println("输入有误，请重新输入：")
+			pMgr.inputStr = ""
 			continue
 		}
 		pMgr.curPage.SelectOption(index)
+		pMgr.inputStr = ""
 	}
 }
 

@@ -33,8 +33,12 @@ func (pro *Processor) serverProcess(mes *message.Message) (err error) {
 		up := &processes.UserProcess{Conn: pro.Conn}
 		up.ServerProcessLogout(mes)
 		return errors.New("用户登出")
+	case message.MessageMesType:
+		smsProcess := &processes.SmsProcess{}
+		smsProcess.SendMessage(mes)
 	default:
 		err = errors.New("未知消息类型")
+		log.Println("mes=", mes)
 	}
 
 	return

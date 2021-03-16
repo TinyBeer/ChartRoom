@@ -6,6 +6,7 @@ import (
 	"ChartRoom/server/model"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net"
 )
 
@@ -217,7 +218,6 @@ func (up *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 			}
 			loginResMes.OnlineUsersID = append(loginResMes.OnlineUsersID, id)
 		}
-
 	}
 
 	// 3.序列化
@@ -236,5 +236,49 @@ func (up *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 	// 使用Transfer返回resMes
 	tf := utils.NewTransfer(up.Conn)
 	tf.WriteData(data)
+
+	if loginResMes.Code == 200 {
+		// 获取离线留言
+		dataSlice, mesErr := model.MyUserDao.WithdrawOfflineMesById(up.UserID)
+		if mesErr != nil {
+			log.Println("WithdrawOfflineMesById failed, err=", mesErr.Error())
+			return
+		}
+
+		// 创建 messageMes
+		var mes message.Message
+		mes.Type = message.SmsMesType
+		var messageMes message.MessageMes
+		var smsMes message.SmsMes
+		smsProcess := &SmsProcess{}
+		for _, messageString := range dataSlice {
+			if err != nil {
+				log.Println("Unmarshal failed, err=", mesErr.Error())
+				continue
+			}
+			// 反序列化 messageMes
+			mesErr = json.Unmarshal([]byte(messageString), &messageMes)
+			if mesErr != nil {
+				log.Println("Unmarshal failed, err=", mesErr.Error())
+				return
+			}
+
+			// 装填smsMes信息
+			smsMes.Content = messageMes.Content
+			smsMes.User = messageMes.User
+
+			// 封包
+			mesErr = utils.Pack(&mes, &smsMes)
+			if err != mesErr {
+				fmt.Println("Pack failed, err=", err)
+				return
+			}
+			log.Println(mes)
+
+			// 发送
+			smsProcess.SendMesToEachOnlineUser(&mes, up.Conn)
+		}
+	}
+
 	return
 }

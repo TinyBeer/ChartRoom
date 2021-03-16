@@ -90,7 +90,7 @@ func (up *UserProcess) Logout() {
 	// 3.封包
 	err := utils.Pack(&mes, &logoutMes)
 	if err != nil {
-		fmt.Println("Pack failed, err=", err.Error())
+		log.Println("Pack failed, err=", err.Error())
 		return
 	}
 

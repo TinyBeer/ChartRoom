@@ -40,7 +40,7 @@ func ServerMesProcess(conn net.Conn) {
 			updateUserStatus(&notifyUserStatusMes)
 			OutputOnlineUsers()
 		case message.SmsMesType:
-			outputGroupMes(&mes)
+			outputMes(&mes)
 		default:
 			fmt.Println("获取到未知消息类型")
 		}

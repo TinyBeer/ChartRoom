@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/garyburd/redigo/redis"
 )
@@ -11,7 +12,9 @@ var (
 )
 
 func main() {
-	testRedisPool()
+	// testRedisPool()
+	delList()
+	// testList()
 }
 
 // 初始化连接池
@@ -24,6 +27,32 @@ func init() {
 		Dial: func() (redis.Conn, error) { // 创建连接的函数
 			return redis.Dial("tcp", "localhost:6379")
 		},
+	}
+}
+
+func delList() {
+	// 取出连接
+	conn := pool.Get()
+
+	// 延时关闭
+	defer conn.Close()
+	dataSlice, err := redis.Int64(conn.Do("del", "mesList200"))
+	log.Println(dataSlice)
+	if err != nil {
+		log.Println(err.Error())
+	}
+}
+
+func testList() {
+	// 取出连接
+	conn := pool.Get()
+
+	// 延时关闭
+	defer conn.Close()
+	dataSlice, err := redis.Strings(conn.Do("lrange", "mesList200", 0, -1))
+	log.Println(dataSlice)
+	if err != nil {
+		log.Println(err.Error())
 	}
 }
 
