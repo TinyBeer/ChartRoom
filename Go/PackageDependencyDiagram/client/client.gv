@@ -1,0 +1,5 @@
+digraph {
+    main -> view;
+    main -> processes -> utils -> message;
+    processes -> message;
+}
