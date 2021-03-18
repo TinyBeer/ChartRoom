@@ -32,7 +32,7 @@ func ServerMesProcess(conn net.Conn) {
 		case message.NotifyUserStatusMesType:
 			// 处理用户状态更新消息
 			var notifyUserStatusMes message.NotifyUserStatusMes
-			err = utils.Unpack(&mes, &notifyUserStatusMes)
+			err = message.Unpack(&mes, &notifyUserStatusMes)
 			if err != nil {
 				log.Println("Unpack failed, err=", err.Error())
 				continue

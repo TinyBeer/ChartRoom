@@ -22,7 +22,7 @@ type UserProcess struct {
 func (up *UserProcess) ServerProcessLogout(mes *message.Message) (err error) {
 	// 1.先取出mes.Data，并反序列化
 	var logoutMes message.LogoutMes
-	err = utils.Unpack(mes, &logoutMes)
+	err = message.Unpack(mes, &logoutMes)
 	if err != nil {
 		return
 	}
@@ -57,7 +57,7 @@ func (up *UserProcess) NotifyMeOffline(userId int) {
 	notifyUserStatusMes.UserStatus = message.USER_OFFLINE
 
 	// 封包
-	err := utils.Pack(&mes, &notifyUserStatusMes)
+	err := message.Pack(&mes, &notifyUserStatusMes)
 	if err != nil {
 		fmt.Println("Pack failed, err=", err.Error())
 		return
@@ -104,7 +104,7 @@ func (up *UserProcess) NotifyMeOnline(userId int) {
 	notifyUserStatusMes.UserStatus = message.USER_ONLINE
 
 	// 封包
-	err := utils.Pack(&mes, &notifyUserStatusMes)
+	err := message.Pack(&mes, &notifyUserStatusMes)
 	if err != nil {
 		fmt.Println("Pack failed, err=", err.Error())
 		return
@@ -127,7 +127,7 @@ func (up *UserProcess) NotifyMeOnline(userId int) {
 // 处理注册mes
 func (up *UserProcess) ServerProccessRegister(mes *message.Message) (err error) {
 	var registerMes message.RegisterMes
-	err = utils.Unpack(mes, &registerMes)
+	err = message.Unpack(mes, &registerMes)
 	if err != nil {
 		return
 	}
@@ -154,7 +154,7 @@ func (up *UserProcess) ServerProccessRegister(mes *message.Message) (err error) 
 	}
 
 	// 3.封包
-	err = utils.Pack(&resMes, &registerResMes)
+	err = message.Pack(&resMes, &registerResMes)
 	if err != nil {
 		fmt.Println("Pack failed, err=", err)
 		return
@@ -176,7 +176,7 @@ func (up *UserProcess) ServerProccessRegister(mes *message.Message) (err error) 
 func (up *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 	// 1.先取出mes.Data，并反序列化
 	var loginMes message.LoginMes
-	err = utils.Unpack(mes, &loginMes)
+	err = message.Unpack(mes, &loginMes)
 	if err != nil {
 		return
 	}
@@ -222,7 +222,7 @@ func (up *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 	}
 
 	// 3.封包
-	err = utils.Pack(&resMes, &loginResMes)
+	err = message.Pack(&resMes, &loginResMes)
 	if err != nil {
 		fmt.Println("Pack failed, err=", err)
 		return

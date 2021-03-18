@@ -2,7 +2,6 @@ package processes
 
 import (
 	"ChartRoom/Go/common/message"
-	"ChartRoom/Go/common/utils"
 	"fmt"
 )
 
@@ -10,7 +9,7 @@ import (
 func outputMes(mes *message.Message) {
 	// 反序列化
 	var smsMes message.SmsMes
-	err := utils.Unpack(mes, &smsMes)
+	err := message.Unpack(mes, &smsMes)
 	if err != nil {
 		fmt.Println("Unpack failed, err=", err.Error())
 		return

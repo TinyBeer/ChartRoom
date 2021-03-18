@@ -1,11 +1,10 @@
-package utils
+package message
 
 import (
-	"ChartRoom/Go/common/message"
 	"encoding/json"
 )
 
-func Pack(mes *message.Message, mess interface{}) (err error) {
+func Pack(mes *Message, mess interface{}) (err error) {
 	// 1.序列化loginMes
 	data, err := json.Marshal(mess)
 	if err != nil {
@@ -17,7 +16,7 @@ func Pack(mes *message.Message, mess interface{}) (err error) {
 	return
 }
 
-func Unpack(mes *message.Message, mess interface{}) (err error) {
+func Unpack(mes *Message, mess interface{}) (err error) {
 	err = json.Unmarshal([]byte(mes.Data), mess)
 	if err != nil {
 		return

@@ -34,7 +34,7 @@ func (up *UserProcess) Register(userID int, userPwd, userName string) (err error
 	registerMes.User.UserName = userName
 
 	// 封包
-	err = utils.Pack(&mes, &registerMes)
+	err = message.Pack(&mes, &registerMes)
 	if err != nil {
 		return err
 	}
@@ -67,7 +67,7 @@ func (up *UserProcess) Register(userID int, userPwd, userName string) (err error
 
 	// 解包
 	var registerResMes message.RegisterResMes
-	err = utils.Unpack(&resMes, &registerResMes)
+	err = message.Unpack(&resMes, &registerResMes)
 	if err != nil {
 		log.Println("Unpack failed, err=", err.Error())
 		return
@@ -88,7 +88,7 @@ func (up *UserProcess) Logout() {
 	var logoutMes message.LogoutMes
 	logoutMes.User = CurUser.User
 	// 3.封包
-	err := utils.Pack(&mes, &logoutMes)
+	err := message.Pack(&mes, &logoutMes)
 	if err != nil {
 		log.Println("Pack failed, err=", err.Error())
 		return
@@ -122,8 +122,11 @@ func (up *UserProcess) Login(userID int, userPwd string) (conn net.Conn, err err
 	loginMes.UserPwd = userPwd
 
 	// 4.封包
-	err = utils.Pack(&mes, &loginMes)
-
+	err = message.Pack(&mes, &loginMes)
+	if err != nil {
+		log.Println("pack failed, err=", err.Error())
+		return
+	}
 	// 序列化
 	data, err := json.Marshal(&mes)
 	if err != nil {
@@ -153,7 +156,7 @@ func (up *UserProcess) Login(userID int, userPwd string) (conn net.Conn, err err
 
 	// 解包
 	var loginResMes message.LoginResMes
-	err = utils.Unpack(&resMes, &loginResMes)
+	err = message.Unpack(&resMes, &loginResMes)
 	if err != nil {
 		fmt.Println("Unpack failed, err=", err.Error())
 		return

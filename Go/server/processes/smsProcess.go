@@ -46,7 +46,7 @@ func (sp *SmsProcess) SendOfflineMessage(userID int, conn net.Conn) (err error) 
 		smsMes.User = messageMes.User
 
 		// 封包
-		mesErr = utils.Pack(&mes, &smsMes)
+		mesErr = message.Pack(&mes, &smsMes)
 		if err != mesErr {
 			fmt.Println("Pack failed, err=", err)
 			return
@@ -63,9 +63,9 @@ func (sp *SmsProcess) SendMessage(mes *message.Message) (err error) {
 
 	// 1.取出mes.Data,并反序列化
 	var messageMes message.MessageMes
-	err = utils.Unpack(mes, &messageMes)
+	err = message.Unpack(mes, &messageMes)
 	if err != nil {
-		log.Println("ServerProcessMessage utils.Unpack failed, err=", err.Error())
+		log.Println("ServerProcessMessage message.Unpack failed, err=", err.Error())
 		return
 	}
 
@@ -91,9 +91,9 @@ func (sp *SmsProcess) SendMessage(mes *message.Message) (err error) {
 		smsMes.Content = messageMes.Content
 		smsMes.User = messageMes.User
 		// 封包
-		err = utils.Pack(&sendMes, &smsMes)
+		err = message.Pack(&sendMes, &smsMes)
 		if err != nil {
-			log.Println("ServerProcessMessage utils.Pack failed, err=", err.Error())
+			log.Println("ServerProcessMessage message.Pack failed, err=", err.Error())
 			return
 		}
 		// 使用SendMesToEachOnlineUser函数发送sendMes
@@ -114,7 +114,7 @@ func (sp *SmsProcess) SendGroupMes(mes *message.Message) (err error) {
 
 	// 取出smsMes
 	var smsMes message.SmsMes
-	err = utils.Unpack(mes, &smsMes)
+	err = message.Unpack(mes, &smsMes)
 	if err != nil {
 		log.Println("Unpack failed, err=", err.Error())
 		return

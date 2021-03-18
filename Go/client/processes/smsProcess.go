@@ -60,7 +60,7 @@ func (sp *SmsProcess) SendGroupMes(content string) (err error) {
 	smsMes.UserStatus = CurUser.UserStatus
 
 	// 序列化smsMes
-	err = utils.Pack(&mes, &smsMes)
+	err = message.Pack(&mes, &smsMes)
 	if err != nil {
 		fmt.Println("Pack failed, err=", err.Error())
 		return
