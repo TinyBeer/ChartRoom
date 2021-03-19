@@ -1,4 +1,4 @@
-# ChartRoom
+# ChatRoom
 
 海量用户聊天系统  -----Go语言网络编程的实践
 
