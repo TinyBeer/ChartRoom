@@ -4,7 +4,7 @@
 
 项目目的：实现基于Golang开发多人在线聊天平台
 
-相关技术：Go socket Redis Vue
+相关技术：Go socket Redis Vue ase
 
 
 
