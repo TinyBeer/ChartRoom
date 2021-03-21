@@ -203,23 +203,32 @@ func (up *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 				loginResMes.Error = "服务器内部错误"
 			}
 		} else {
-			loginResMes.Code = 200 // 登录成功
-			// 用户登录成功  更行onlineUsers
-			// 为up加入UserID
-			up.UserID = loginMes.UserID
-			loginResMes.UserName = user.UserName
-			userMgr.AddOnlineUser(up)
-			fmt.Printf("用户%d登录\n", loginMes.UserID)
-			// 通知其他用户上线
-			up.NotifyOthersOnline(loginMes.UserID)
 
-			// fmt.Println(user)
-			for id, _ := range userMgr.onlineUsers {
-				if id == user.UserID {
-					continue
+			_, ok := userMgr.onlineUsers[loginMes.UserID]
+
+			if ok {
+				loginResMes.Code = 501 // 用户已登录
+				loginResMes.Error = "用户已登录"
+			} else {
+				loginResMes.Code = 200 // 登录成功
+				// 用户登录成功  更行onlineUsers
+				// 为up加入UserID
+				up.UserID = loginMes.UserID
+				loginResMes.UserName = user.UserName
+				userMgr.AddOnlineUser(up)
+				fmt.Printf("用户%d登录\n", loginMes.UserID)
+				// 通知其他用户上线
+				up.NotifyOthersOnline(loginMes.UserID)
+
+				// fmt.Println(user)
+				for id, _ := range userMgr.onlineUsers {
+					if id == user.UserID {
+						continue
+					}
+					loginResMes.OnlineUsersID = append(loginResMes.OnlineUsersID, id)
 				}
-				loginResMes.OnlineUsersID = append(loginResMes.OnlineUsersID, id)
 			}
+
 		}
 	default:
 		return
