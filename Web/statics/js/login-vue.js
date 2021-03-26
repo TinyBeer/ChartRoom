@@ -3,7 +3,7 @@ var app = new Vue({
     data : {
         userID : null,
         password : '',
-        isPC : true,
+        showImg : true,
         isRegister:false,
         // 图片路径请自行更改
         imgSrc : ["/img/1.jpg","/img/2.jpg","/img/3.jpg","/img/4.jpg",
@@ -11,7 +11,16 @@ var app = new Vue({
         imgIndex : 0,
     },
     created: function() {
-        setInterval(this.lantenSlide, 2000);
+      
+        console.log("Width:"+window.innerWidth);
+        console.log("Height:"+window.innerHeight);
+        if ( window.innerWidth / window.innerHeight < 1.5){
+            this.showImg = false;
+        } else {
+            document.getElementById("form-container").style.width = '30%';
+            setInterval(this.lantenSlide, 2000);
+        }
+
     },
     
 

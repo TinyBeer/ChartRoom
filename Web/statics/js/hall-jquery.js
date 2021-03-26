@@ -10,23 +10,34 @@ $('#btn1').click(function(){
   });
 })
 
-function clock() {
-    // NewTalk('hello');
-    axios.get('content', {})
-          .then(function (response) {
-          if (response.data.content.length != 0){
-              NewTalk(response.data.content)
-            }                            
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-}
+
 $(function(){
     
-var timer = setInterval("clock()", 2000)
+    var timer = setInterval("clock()", 2000)
     
+    console.log("Width:"+window.innerWidth);
+    console.log("Height:"+window.innerHeight);
+    if (window.innerWidth / window.innerHeight < 1.5){
+      $("#dialog-container").css({
+        "width" : "80%",
+        "height" : "80%"
+    })
+    }
 }); 
+
+function clock() {
+  // NewTalk('hello');
+  axios.get('content', {})
+        .then(function (response) {
+        if (response.data.content.length != 0){
+            NewTalk(response.data.content)
+          }                            
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+}
+
 
 function NewTalk(content) {
         var $liNew = $(' <li><span>'+ content + '</span></li>');

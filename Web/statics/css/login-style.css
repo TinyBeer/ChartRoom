@@ -17,7 +17,7 @@ body {
     position: relative;
     top: 20px;
     height:80%;    
-    width: auto;
+    width: 80%;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 8);
     display: flex;
 }
@@ -30,7 +30,8 @@ body {
 }
 
 #form-container {
-    width: 30%;
+    align-self: center;
+    min-width: 180px;
     height: 100%;
     background-color: white;
     display: flex;

@@ -5,11 +5,20 @@
 
 body {
     background-color: gray;
+    align-content: center;
+    justify-content: center;
 }
 
-.dialog-container {
-    width: 80%;
-    height: 80vh;
+#container {
+     width: 98%;
+     height: 98vh;
+   
+    background-color: greenyellow;
+}
+
+#dialog-container {
+    width: 100%;
+    height: 78%;
     background-image: url("/xxx/img/hallbg.jpg") ;
 }
 
@@ -38,23 +47,25 @@ body {
 }
 
 
-.input-container {
-    width: 80%;
-    height: 20vh;
+#input-container {
+    width: 100%;
+    height:20%;
+    align-content: center;
     background-color: whitesmoke;
 }
 
-.input-container textarea {
+#input-container textarea {
     width:80%;
     height:99%;
     border-top:0px;
     border-left:0px;
     border-bottom:0px;
     border-right:auto;
-    font-size: 32px;
+    font-size: 24px;
+   
 }
 
 button {
     position: relative;
-    float: right;  
-}
+    float: right;
+} 

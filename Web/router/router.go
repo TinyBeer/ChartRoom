@@ -14,9 +14,11 @@ var (
 	val_cookie string = "test"
 )
 
-// 函数方式返回中间件   也可使用中间件函数
-func AuthMiddleWare() gin.HandlerFunc {
-	return func(c *gin.Context) {
+func SetupRouter() (r *gin.Engine) {
+	r = gin.Default()
+
+	// 函数方式返回中间件   也可使用中间件函数
+	AuthMiddleWare := func(c *gin.Context) {
 		// 获取客户端cookie并校验
 		if cookie, err := c.Cookie(key_cookie); err == nil {
 			if cookie == val_cookie {
@@ -27,19 +29,17 @@ func AuthMiddleWare() gin.HandlerFunc {
 		}
 
 		// 返回错误代码
-		c.JSON(304, gin.H{
-			"error": "err",
-		})
-
+		// c.JSON(304, gin.H{
+		// 	"error": "err",
+		// })
+		c.Request.URL.Path = "/"
+		r.HandleContext(c)
 		// 禁止后续访问
 		c.Abort()
+
 		return
 
 	}
-}
-
-func SetupRouter() (r *gin.Engine) {
-	r = gin.Default()
 
 	r.LoadHTMLGlob("templates/*")
 
@@ -49,7 +49,7 @@ func SetupRouter() (r *gin.Engine) {
 		c.HTML(http.StatusOK, "login.html", nil)
 	})
 
-	r.GET("/hall", AuthMiddleWare(), func(c *gin.Context) {
+	r.GET("/hall", AuthMiddleWare, func(c *gin.Context) {
 		c.HTML(http.StatusOK, "hall.html", nil)
 	})
 
@@ -74,12 +74,12 @@ func SetupRouter() (r *gin.Engine) {
 		})
 	})
 
-	r.GET("/content", AuthMiddleWare(), func(c *gin.Context) {
+	r.GET("/content", AuthMiddleWare, func(c *gin.Context) {
 		userID := 100
 		handlers.GetContentHandler(c, userID)
 	})
 
-	r.POST("/content", AuthMiddleWare(), func(c *gin.Context) {
+	r.POST("/content", AuthMiddleWare, func(c *gin.Context) {
 		cookie, err := c.Cookie("gin_cookie")
 		fmt.Println(cookie)
 		if err != nil {
