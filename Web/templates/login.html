@@ -14,7 +14,7 @@
 </head>
 <body>
     <div id="container">
-        <div id="img-container" v-bind:style="{backgroundImage:'url(/xxx/' + imgSrc[imgIndex] + ')'}"> </div>
+        <div id="img-container" v-show="isPC" v-bind:style="{backgroundImage:'url(/xxx/' + imgSrc[imgIndex] + ')'}"> </div>
 
         <div id="form-container">
             <div id="form-content">
