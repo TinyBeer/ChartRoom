@@ -1,11 +1,54 @@
 package dao
 
 import (
-	"ChatRoom/Go/server/cache"
+	"ChatRoom/Go/server/database"
 	"log"
-	"strconv"
 )
 
+/*   mysql */
+type MySqlSmsDao struct {
+}
+
+const (
+	SMS_SET = "insert into sms(user_id, content, created_at) values(?, ?, Now());"
+	SMS_GET = "select sms_id, content from sms where user_id = ? and created_at >= subtime(now(), ?) and isnull(deleted_at);"
+	SMS_DEL = "update sms set deleted_at = now() where sms_id = ?;"
+)
+
+func (msd *MySqlSmsDao) DepositeByID(id int, content string) (err error) {
+	err = database.Exec(SMS_SET, id, content)
+	return
+}
+
+func (msd *MySqlSmsDao) WithdrawByID(id int) ([]string, error) {
+	rows, err := database.Query(SMS_GET, id, "12:00:00")
+	if err != nil {
+		return nil, err
+	}
+	var (
+		smsId   int
+		content string
+	)
+
+	smsList := make([]string, 0, 20)
+	for rows.Next() {
+		err = rows.Scan(&smsId, &content)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		err = database.Exec(SMS_DEL, smsId)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		smsList = append(smsList, content)
+	}
+	return smsList, nil
+}
+
+//  redis
+/*
 type RedisSmsDao struct {
 }
 
@@ -38,3 +81,5 @@ func (rsd *RedisSmsDao) WithdrawByID(id int) (dataSlice []string, err error) {
 	// 退出
 	return
 }
+*/
+// end redis

@@ -14,7 +14,7 @@ var (
 // 服务器启动后初始化一个全局的UserDao
 var (
 	MyUserDao = &RedisUserDao{}
-	MySmsDao  = &RedisSmsDao{}
+	MySmsDao  = &MySqlSmsDao{}
 )
 
 type IUserDao interface {

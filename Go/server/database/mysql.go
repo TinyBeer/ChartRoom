@@ -1,4 +1,4 @@
-package mysql
+package database
 
 import (
 	"database/sql"
@@ -7,7 +7,22 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var sqldb *sql.DB
+var (
+	sqldb *sql.DB
+)
+
+func Query(queryStr string, arg ...interface{}) (*sql.Rows, error) {
+	return sqldb.Query(queryStr, arg...)
+}
+
+func Exec(queryStr string, arg ...interface{}) error {
+	_, err := sqldb.Exec(queryStr, arg...)
+	return err
+}
+
+func Close() {
+	sqldb.Close()
+}
 
 func Init(username string, password string, addr string, port int, dbName string) (err error) {
 	// connect to mysql
@@ -28,8 +43,4 @@ func Init(username string, password string, addr string, port int, dbName string
 		panic("failed to connect to mysql database, err:" + err.Error())
 	}
 	return nil
-}
-
-func GetSqlDB() *sql.DB {
-	return sqldb
 }
