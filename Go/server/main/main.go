@@ -6,12 +6,14 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/viper"
 )
 
 func Config() {
-	workDir, _ := os.Getwd()
+	pathName, _ := os.Executable()
+	workDir := filepath.Dir(pathName)
 	viper.SetConfigName("application")
 	viper.SetConfigType("yml")
 	viper.AddConfigPath(workDir + "/config")

@@ -3,6 +3,7 @@ package main
 import (
 	"ChatRoom/Go/client/processes"
 	"ChatRoom/Go/client/view"
+	"bufio"
 	"fmt"
 	"log"
 	"net"
@@ -60,7 +61,11 @@ func InitView() *view.PageMgr {
 	})
 	p.AddOption("\t群发消息", func() {
 		fmt.Println("请输入要发送的消息:")
-		fmt.Scanf("%s\n", &content)
+		scanner := bufio.NewScanner(os.Stdin)
+		if !scanner.Scan() {
+			return
+		}
+		content = scanner.Text()
 		smsProcess.SendGroupMes(content)
 	})
 	p.AddOption("\t信息列表", func() {
@@ -71,7 +76,11 @@ func InitView() *view.PageMgr {
 		fmt.Println("请输入要给用户的ID:")
 		fmt.Scanln(&toUserID)
 		fmt.Println("请输入要发送的消息:")
-		fmt.Scanln(&content)
+		scanner := bufio.NewScanner(os.Stdin)
+		if !scanner.Scan() {
+			return
+		}
+		content = scanner.Text()
 		smsProcess.SendMessageToUser(toUserID, content)
 	})
 

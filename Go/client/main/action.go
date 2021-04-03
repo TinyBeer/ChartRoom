@@ -5,10 +5,10 @@ import (
 	"ChatRoom/Go/client/view"
 	"fmt"
 	"net"
+	"strings"
 )
 
 var (
-	key      int
 	userID   int
 	userPwd  string
 	userName string
@@ -32,7 +32,8 @@ func UserRegister() (err error) {
 	fmt.Println("请输入密码：")
 	fmt.Scanln(&userPwd)
 	fmt.Println("请输入用户昵称：")
-	fmt.Scanln(&userName)
+	fmt.Scanf("%s\n", &userName)
+	userName = strings.Trim(userName, "\r\n")
 	// 调用UserDao实例  实现注册
 	up := &processes.UserProcess{}
 	err = up.Register(userID, userPwd, userName)
