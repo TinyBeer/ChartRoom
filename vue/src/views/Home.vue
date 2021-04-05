@@ -34,6 +34,7 @@
               md="2"
             >
               <b-button
+                class="mt-1"
                 @click="speak"
                 variant="primary"
                 pill
@@ -45,11 +46,12 @@
               md="2"
             >
               <b-button
+                class="mt-1"
                 @click="getContent"
                 variant="success"
                 pill
                 block
-              >接收</b-button>
+              >{{ btnGetContent }} </b-button>
             </b-col>
             <b-col
               cols="12"
@@ -74,7 +76,9 @@ export default {
     return {
       content: '',
       text: '',
-      content_id: 1,
+      content_id: 0,
+      timer: null,
+      btnGetContent: '开始接收',
     };
   },
   methods: {
@@ -98,17 +102,28 @@ export default {
       });
     },
     getContent() {
-      this.userGetContent(this.content_id).then((res) => {
-        this.content_id = res.data.data.content_id;
-        if (!res.data.data.content) {
-          return;
-        }
-        res.data.data.content.forEach((contents) => {
-          this.content = `${contents.speaker.name}:${contents.content}\n${this.content}`;
+      console.log(this.timer);
+      if (this.timer) {
+        clearInterval(this.timer);
+        this.timer = null;
+        this.btnGetContent = '开始接收';
+        return;
+      }
+
+      this.btnGetContent = '停止接收';
+      this.timer = setInterval(() => {
+        this.userGetContent(this.content_id).then((res) => {
+          this.content_id = res.data.data.content_id;
+          if (!res.data.data.content) {
+            return;
+          }
+          res.data.data.content.forEach((contents) => {
+            this.content = `${contents.speaker.name}:${contents.content}\n${this.content}`;
+          });
+        }).catch((err) => {
+          console.log(err);
         });
-      }).catch((err) => {
-        console.log(err);
-      });
+      }, 1000);
     },
   },
 };

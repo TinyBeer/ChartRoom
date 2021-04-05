@@ -10,9 +10,9 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    // meta: {
-    //   auth: true, // 本路由需要验证
-    // },
+    meta: {
+      auth: true, // 本路由需要验证
+    },
     component: Home,
   },
   {
@@ -36,8 +36,10 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.meta.auth) {
     // 判断是否登录
-    if (store.state.token) {
+    console.log(store.state.userModule.token);
+    if (store.state.userModule.token) {
       // 需要判断token的有效性
+
       next();
     } else {
       router.push({ name: 'login' });
